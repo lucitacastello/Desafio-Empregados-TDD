@@ -1,14 +1,14 @@
 package com.devsuperior.demo.services;
 
 import com.devsuperior.demo.dto.EmployeeDTO;
+import com.devsuperior.demo.entities.Department;
 import com.devsuperior.demo.entities.Employee;
 import com.devsuperior.demo.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -17,11 +17,26 @@ public class EmployeeService {
     private EmployeeRepository repository;
 
     @Transactional(readOnly = true)
-    public List<EmployeeDTO> findAll() {
-        List<Employee> list = repository.findAll();
+    public Page<EmployeeDTO> findAll(Pageable pageable) {
 
-        return list.stream().map(EmployeeDTO::new)
-                .sorted()
-                .collect(Collectors.toList());
+        Page<Employee> page = repository.findAll(pageable);
+        return page.map(EmployeeDTO::new);
+    }
+
+    @Transactional
+    public EmployeeDTO insert(EmployeeDTO dto) {
+
+        Employee entity = new Employee();
+        copyDtoToEntity(dto, entity);
+        entity = repository.save(entity);
+        return new EmployeeDTO(entity);
+    }
+
+    private void copyDtoToEntity(EmployeeDTO dto, Employee entity) {
+
+        entity.setName(dto.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setDepartment(new Department(dto.getDepartmentId(), null));
+
     }
 }
