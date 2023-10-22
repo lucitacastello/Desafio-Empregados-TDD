@@ -4,7 +4,6 @@ import com.devsuperior.demo.dto.DepartmentDTO;
 import com.devsuperior.demo.entities.Department;
 import com.devsuperior.demo.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
